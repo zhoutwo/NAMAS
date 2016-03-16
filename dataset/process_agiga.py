@@ -16,6 +16,7 @@ import sys
 import os
 import re
 import gzip
+from nltk import word_tokenize, sent_tokenize
 #@lint-avoid-python-3-compatibility-imports
 
 # Make directory for output if it doesn't exist
@@ -26,7 +27,7 @@ except OSError:
     pass
 
 # Strip off .gz ending
-end = "/".join(sys.argv[1].split("/")[-2:])[:-len(".xml.gz")] + ".txt"
+end = "/".join(sys.argv[1].split("/")[-2:])[:-len(".gz")] + ".txt"
 
 out = open(sys.argv[2] + end, "w")
 
@@ -35,14 +36,6 @@ NONE, HEAD, NEXT, TEXT = 0, 1, 2, 3
 MODE = NONE
 title_parse = ""
 article_parse = []
-
-# FIX: Some parses are mis-parenthesized.
-def fix_paren(parse):
-    if len(parse) < 2:
-        return parse
-    if parse[0] == "(" and parse[1] == " ":
-        return parse[2:-1]
-    return parse
 
 def get_words(parse):
     words = []
@@ -58,11 +51,11 @@ def remove_digits(parse):
 
 for l in gzip.open(sys.argv[1]):
     if MODE == HEAD:
-        title_parse = remove_digits(fix_paren(l.strip()))
+        title_parse = word_tokenize(remove_digits(l.strip()))
         MODE = NEXT
 
-    if MODE == TEXT:
-        article_parse.append(remove_digits(fix_paren(l.strip())))
+    if MODE == TEXT and l.strip() != "</P>":
+        article_parse.append(remove_digits(l.strip()))
 
     if MODE == NONE and l.strip() == "<HEADLINE>":
         MODE = HEAD
@@ -71,20 +64,29 @@ for l in gzip.open(sys.argv[1]):
         MODE = TEXT
 
     if MODE == TEXT and l.strip() == "</P>":
-        articles = []
-        # Annotated gigaword has a poor sentence segmenter.
-        # Ensure there is a least a period.
+        try:
+            articles = ''
+            # Annotated gigaword has a poor sentence segmenter.
+            # Ensure there is a least a period.
 
-        for i in range(len(article_parse)):
-            articles.append(article_parse[i])
-            if "(. .)" in article_parse[i]:
-                break
+            for i in xrange(len(article_parse)):
+                articles += article_parse[i] + ' '
 
-        article_parse = "(TOP " + " ".join(articles) + ")"
+            sentence = []
+            for w in word_tokenize(articles):
+                sentence.append(w)
+                if w == '.':
+                    break
 
-        # title_parse \t article_parse \t title \t article
-        print >>out, "\t".join([title_parse, article_parse,
-                                " ".join(get_words(title_parse)),
-                                " ".join(get_words(article_parse))])
-        article_parse = []
-        MODE = NONE
+            # article_parse = "(TOP " + " ".join(articles) + ")"
+
+            # title_parse \t article_parse \t title \t article
+            print >>out, "\t".join(['TP', 'AP',
+                " ".join(title_parse),
+                ' '.join(sentence)
+                ])
+        except:
+            print articles
+        finally:
+            article_parse = []
+            MODE = NONE

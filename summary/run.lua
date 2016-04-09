@@ -11,7 +11,7 @@
 --          Jason Weston <jase@fb.com>
 
 require('torch')
-require('nn')
+require('fbcunn')
 require('sys')
 
 local nnlm = require('summary.nnlm')
@@ -23,7 +23,7 @@ cmd = torch.CmdLine()
 
 beam.addOpts(cmd)
 
-cutorch.setDevice(2)
+cutorch.setDevice(1)
 
 cmd:option('-modelFilename', '', 'Model to test.')
 cmd:option('-inputf',        '', 'Input article files. ')

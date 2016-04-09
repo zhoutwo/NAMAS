@@ -16,13 +16,13 @@ import sys
 
 d = {"src": sys.argv[1],
      "model": sys.argv[2],
-     "title_len": 14}
+     "title_len": sys.argv[3]}
 
-for l in open("tuning/blank.params"):
+for l in open("tuning/SDecoder_cfg.txt"):
     f, val = l.strip().split()
     d[f] = val
 
-cmd = "cd $ABS; $CUTH $ABS/summary/run.lua -modelFilename {model} " + \
+cmd = "cd $ABS; th $ABS/summary/run.lua -modelFilename {model} " + \
       "-inputf {src} -recombine " + \
       "-length {title_len} -blockRepeatWords " + \
       "-lmWeight {LM} -unigramBonus {uni} -bigramBonus {bi} " + \

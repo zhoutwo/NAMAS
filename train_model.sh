@@ -6,7 +6,7 @@ export MDL_DIR=$1/models
 
 export LUA_PATH="$LUA_PATH;$ABS/?.lua"
 
-#bash $ABS/prep_torch_data.sh $2
+# bash $ABS/prep_torch_data.sh $2
 
 mkdir -p $MDL_DIR
 

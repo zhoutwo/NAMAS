@@ -11,7 +11,7 @@
 --          Jason Weston <jase@fb.com>
 
 require('torch')
-require('fbcunn')
+-- require('fbcunn')
 require('sys')
 
 local nnlm = require('summary.nnlm')

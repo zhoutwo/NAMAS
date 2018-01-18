@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 COUNT=5
 WINDOW=5

@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 export AGIGA=$1
 export WORK=$2
@@ -9,16 +9,14 @@ export UNK=5
 
 echo "Step 1: Construct the title-article pairs from gigaword"
 mkdir -p $WORK
-# find $AGIGA/???/*.xml.gz | parallel --gnu --progress -j $THREADS python2.7 $SCRIPTS/process_agiga.py \{\} $WORK
-find $AGIGA/*/data/*/*.gz | parallel --gnu --progress -j $THREADS python2.7 $SCRIPTS/process_agiga.py \{\} $WORK
-# find $AGIGA/data/*/*.gz | parallel --gnu --progress -j $THREADS python2.7 $SCRIPTS/process_agiga.py \{\} $WORK
-python2.7 $SCRIPTS/rename.py $WORK
+find -L $AGIGA -name '*.gz' | parallel --gnu --progress -j $THREADS python2.7 $SCRIPTS/process_agiga.py \{\} $WORK
+#python2.7 $SCRIPTS/rename.py $WORK
 
 echo "Step 2: Compile the data into train/dev/test."
 cd $WORK
-cat $SPLITS/train.splits | xargs cat > train.data.txt
-cat $SPLITS/valid.splits | xargs cat > valid.data.txt
-cat $SPLITS/test.splits  | xargs cat > test.data.txt
+cat $SPLITS/train.splits | xargs -I cat > train.data.txt
+cat $SPLITS/valid.splits | xargs -I cat > valid.data.txt
+cat $SPLITS/test.splits  | xargs -I cat > test.data.txt
 
 
 echo "Step 3: Basic filtering on train/dev."

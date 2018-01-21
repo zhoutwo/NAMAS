@@ -96,6 +96,8 @@ local function main()
          else
             -- Print out in standard format.
             local len, _, output, _ = unpack(results[1])
+            print('len', len)
+            print('output', output)
             local total = 0
             for j = W+2, W+len - 1 do
                local word = tdict.index_to_symbol[output[j]]
@@ -110,7 +112,7 @@ local function main()
             io.write(sent_num-1, " ||| ")
             local len, score, output, features = unpack(results[k])
             print('len', len)
-            print('score', socre)
+            print('score', score)
             print('output', output)
             print('features', features)
             for j = W+2, W+len - 1 do

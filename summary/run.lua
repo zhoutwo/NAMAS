@@ -72,6 +72,9 @@ local function main()
       -- Add padding.
       local true_line = "<s> <s> <s> " .. line .. " </s> </s> </s>"
       local words = utils.string_split(true_line)
+      print('line', line)
+      print('true_line', true_line)
+      print('words', words)
 
       local article = torch.zeros(#words)
       for j = 1, #words do
@@ -79,6 +82,7 @@ local function main()
          article[j] = adict.symbol_to_index[word] or
             adict.symbol_to_index["<unk>"]
       end
+      print('article[1]', article[1])
 
       -- Run beam search.
       local sbeam = beam.init(opt, mlp.mlp, mlp.encoder_model,

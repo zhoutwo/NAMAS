@@ -109,6 +109,10 @@ local function main()
          for k = 1, #results do
             io.write(sent_num-1, " ||| ")
             local len, score, output, features = unpack(results[k])
+            print('len', len)
+            print('score', socre)
+            print('output', output)
+            print('features', features)
             for j = W+2, W+len - 1 do
                io.write(tdict.index_to_symbol[output[j]], " " )
             end

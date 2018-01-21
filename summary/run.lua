@@ -88,6 +88,7 @@ local function main()
       local sbeam = beam.init(opt, mlp.mlp, mlp.encoder_model,
                               dict_map, tdict)
       local results = sbeam:generate(article, len)
+      print(results)
 
       if not opt.nbest then
          if  #results ==  0 then

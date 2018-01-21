@@ -102,6 +102,7 @@ local function main()
             for j = W+2, W+len - 1 do
                local word = tdict.index_to_symbol[output[j]]
                total = total + #word + 1
+               print('next word', word)
                io.write(word, " " )
             end
          end
@@ -116,6 +117,7 @@ local function main()
             print('output', output)
             print('features', features)
             for j = W+2, W+len - 1 do
+               print('next word', tdict.index_to_symbol[output[j]])
                io.write(tdict.index_to_symbol[output[j]], " " )
             end
             io.write(" ||| ")
